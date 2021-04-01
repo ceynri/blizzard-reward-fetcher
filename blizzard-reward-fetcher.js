@@ -25,7 +25,7 @@ const BODY = `itemCode=${WELFARE}`;
 // 最大尝试次数
 const MAX_COUNT = 200;
 
-// 当日抢购时间的时间戳
+// 当日开始领取时间的时间戳
 const moment = new Date();
 console.log('[BRF] 当前时间：', moment);
 moment.setHours(START_TIME.hour);
@@ -44,7 +44,7 @@ const waitTimer = setInterval(() => {
     return;
   }
 
-  console.log('[BRF] 达到指定时间，开始尝试请求');
+  console.log('[BRF] 达到指定时间，开始尝试领取');
 
   let cnt = 0;
   // 抢购定时器
@@ -58,7 +58,7 @@ const waitTimer = setInterval(() => {
         const resText = request.responseText;
         const res = JSON.parse(resText);
         console.log(`第${++cnt}次尝试结果：${res.status}，返回信息：${res.msg}`);
-        // 结束抢购条件
+        // 结束领取的条件
         if (res.status !== 'fail' || cnt >= MAX_COUNT) {
           console.log(`总共${cnt}次尝试，最后结果：${res.status}，返回信息：${res.msg}`);
           clearInterval(fetchTimer);
