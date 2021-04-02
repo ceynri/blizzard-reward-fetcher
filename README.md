@@ -32,3 +32,5 @@
 ## 成功记录
 
 ![record.png](https://i.loli.net/2021/04/02/oLsRIS3gD5JHzA6.png)
+
+![mail.png](https://i.loli.net/2021/04/02/lTRSIY9WOXPsB2A.png)
