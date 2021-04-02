@@ -46,7 +46,11 @@ const waitTimer = setInterval(() => {
 
   console.log('[BRF] 达到指定时间，开始尝试领取');
 
+  // 记录尝试次数
   let cnt = 0;
+  // 是否已完成
+  let done = false;
+
   // 抢购定时器
   const fetchTimer = setInterval(() => {
     // 创建 POST 请求
@@ -54,13 +58,24 @@ const waitTimer = setInterval(() => {
     request.open('POST', URL);
     request.setRequestHeader('Content-Type', CONTENT_TYPE);
     request.onreadystatechange = () => {
+      if (done) {
+        return;
+      }
       if (request.readyState == 4 && request.status == 200) {
+        // 输出尝试结果
         const resText = request.responseText;
         const res = JSON.parse(resText);
-        console.log(`第${++cnt}次尝试结果：${res.status}，返回信息：${res.msg}`);
+        console.log(`[BRF] 第${++cnt}次尝试结果：${res.status}，返回信息：${res.msg}`);
+
         // 结束领取的条件
-        if (res.status !== 'fail' || cnt >= MAX_COUNT) {
-          console.log(`总共${cnt}次尝试，最后结果：${res.status}，返回信息：${res.msg}`);
+        if (res.status === 'success' || cnt >= MAX_COUNT) {
+          console.log(`[BRF] 总共${cnt}次尝试，最后结果：${res.status}，返回信息：${res.msg}`);
+          done = true;
+          clearInterval(fetchTimer);
+        }
+        if (res.msg === 'exist_record') {
+          console.log('[BRF] 你已拥有该礼包');
+          done = true;
           clearInterval(fetchTimer);
         }
       }
@@ -70,4 +85,4 @@ const waitTimer = setInterval(() => {
 
   // 结束等待
   clearInterval(waitTimer);
-}, 100);
+}, 200);
